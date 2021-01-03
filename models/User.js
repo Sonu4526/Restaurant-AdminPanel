@@ -31,7 +31,7 @@ module.exports = function (sequelize, DataTypes) {
     Address: DataTypes.STRING,
     fromTime: DataTypes.STRING,
     toTime: DataTypes.STRING,
-
+    otp: DataTypes.INTEGER(6)
   });
 
   Users.associate = function (models) {

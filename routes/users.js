@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const db = require("../models");
+const forgetPasswordEmail = require("../utils/mails")
+const otpGenerator = require('otp-generator')
 
 router.post("/create", (req, res) => {
   db.users
@@ -142,6 +144,61 @@ router.post("/change-password", (req, res) => {
         });
       }
     });
-});  
+});
 
+router.post("/forget-password", (req, res) => {
+  const user = req.body;
+  db.users.findOne({
+    where: {
+      email: user.email
+    },
+  })
+  .then(async (response) => {
+    if (!response) {
+      res.json({
+        message: "User not found",
+      });
+    } else {
+      response.otp = otpGenerator.generate(6, { upperCase: false, specialChars: false, alphabets: false });
+      await forgetPasswordEmail.forgetPasswordEmail(response)
+      db.users.update({otp: response.otp},{where : {id: response.id}}).then((user) => {
+        if(user) {
+          res.json({
+            message: "Email sent succesfully."
+          });
+        } else {
+          res.json({
+            message: "Failed to send mail."
+          });
+        }
+      });
+    }
+  });
+});
+
+router.post("/verify-otp", (req, res) => {
+  const user = req.body;
+  db.users.findOne({
+    where: {
+      email: user.email
+    },
+  })
+  .then(async (response) => {
+    if (!response) {
+      res.json({
+        message: "User not found",
+      });
+    } else {
+        if(response.otp === user.otp) {
+          res.json({
+            success: true
+          })
+        } else {
+          res.json({
+            success: false
+          })
+        }
+      }
+  });
+});
 module.exports = router;
