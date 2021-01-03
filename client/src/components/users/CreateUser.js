@@ -4,64 +4,43 @@ import { Redirect } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import Button from "../utility/Button";
-import InputGroup from "../utility/InputGroup";
+import { makeStyles } from '@material-ui/core/styles';
+import image from '../images/login-bg.jpg';
+import { Container, TextField } from '@material-ui/core';
+import { Link } from "react-router-dom";
 
-const Container = styled.div`
-  width: 70rem;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  @media (max-width: 800px) {
-    width: 90%;
-  }
-`;
+
+const useStyles = makeStyles((theme) => ({
+  root:{
+  padding: theme.spacing(4),
+  fontFamily: 'Georgia', 
+  backgroundImage: `url(${image})`,
+  backgroundSize: "cover",
+  width: "100%",
+  height: "100-vh",
+ },
+
+  form: {
+      backgroundColor: 'white',
+      boxShadow: " 6px 4px 26px -6px rgba(0, 0, 0, 0.66)",
+      padding: 50,
+      '& > *': {
+          margin: theme.spacing(1),
+        },
+
+  },
+
+}));
 
 const Form = styled.form`
-  width: 100%;
-  background-color: ${(props) => props.theme.colors.white};
-  padding: 5rem 3rem;
-  border-radius: 1rem;
-  @media (max-width: 800px) {
-    padding: 2rem 1rem;
-  }
+ 
 `;
-
-const Section = styled.div`
-  display: grid;
-  grid-template-columns: 20rem auto;
-  margin-bottom: 2rem;
-  @media (max-width: 800px) {
-    grid-template-columns: 10rem auto;
-  }
-`;
-
-const SectionLabel = styled.p`
-  padding: 1rem;
-  font-size: 2rem;
-  color: ${(props) => props.theme.colors.grey};
-  @media (max-width: 800px) {
-    font-size: 1.6rem;
-  }
-`;
-
-const InputSection = styled.div`
-  padding: 1rem;
-`;
-
 const Group = styled.div`
   width: 100%;
   &:not(:last-child) {
     margin-bottom: 1rem;
   }
 `;
-
-const StyledInputGroup = styled(InputGroup)`
-  &:not(:last-child) {
-    margin-bottom: 1rem;
-  }
-`;
-
 const Btn = styled(Button)`
   width: 100%;
 `;
@@ -73,6 +52,7 @@ const ErrorMessage = styled.p`
 `;
 
 export default function CreateUser() {
+  const classes = useStyles()
   // hook up current path to state
   const dispatch = useDispatch();
   useEffect(() => {
@@ -100,7 +80,7 @@ export default function CreateUser() {
     e.preventDefault();
     setError("");
     // form validation
-    if (!name || !email || !restaurant || !phone || !password || !password) {
+    if (!name || !email || !restaurant || !phone || !password || !password ) {
       setError("Please enter all fields");
     } else if (!emailPattern.test(email)) {
       setError("Please enter a valid email");
@@ -129,74 +109,78 @@ export default function CreateUser() {
   return redirect ? (
     <Redirect to="/users/login" />
   ) : (
-    <Container>
-      <Form className="box-shadow" onSubmit={onSubmit}>
-        <Section>
-          <SectionLabel>Personal Information</SectionLabel>
-          <InputSection>
-            <StyledInputGroup
+    <div className={classes.root}>
+    <Container maxWidth="sm">
+    <div className={classes.form}>
+      <Form  onSubmit={onSubmit}>
+      <h3 style={{textAlign:"center", marginBottom:"30px",fontSize:'22px',fontFamily:'Georgia'}}>Create New Account</h3>
+      <h6 style={{fontSize:'15px',fontFamily:'Georgia'}}>Personal Information</h6>   
+      <TextField
+              id="standard-basic"
               style={{ marginBottom: "2rem" }}
               label="Name"
               value={name}
               type="text"
               placeholder="John Doe"
               onChange={(e) => setName(e.target.value)}
+              fullWidth
             />
-            <StyledInputGroup
-              style={{ marginBottom: "2rem" }}
+            <TextField
+              id="standard-basic"
+              style={{ marginBottom: "2rem",fontSize:'30px' }}
               label="Email"
               value={email}
               placeholder="johndoe@gmail.com"
               onChange={(e) => setEmail(e.target.value)}
               type="text"
+              fullWidth
             />
-            <StyledInputGroup
-              style={{ marginBottom: "2rem" }}
+            <TextField
+              style={{ marginBottom: "2rem"}}
               label="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               type="password"
+              fullWidth
             />
-
-            <StyledInputGroup
+            <TextField
               style={{ marginBottom: "2rem" }}
               label="Re-enter Password"
               value={rePassword}
               onChange={(e) => setRePassword(e.target.value)}
               type="password"
+              fullWidth
             />
-          </InputSection>
-        </Section>
-        <Section>
-          <SectionLabel>Business Information</SectionLabel>
-          <InputSection>
-            <StyledInputGroup
+          <h6 style={{fontSize:'15px',fontFamily:'Georgia'}}>Buisness Information</h6>
+            <TextField
               style={{ marginBottom: "2rem" }}
               label="Restaurant Name"
               value={restaurant}
               placeholder="In N Out"
               onChange={(e) => setRestaurant(e.target.value)}
               type="text"
+              fullWidth
             />
-            <StyledInputGroup
+            <TextField
               style={{ marginBottom: "2rem" }}
               label="Phone Number"
               value={phone}
               placeholder="123-456-7890"
               onChange={(e) => setPhone(e.target.value)}
               type="text"
+              fullWidth
             />
-          </InputSection>
-        </Section>
         {error ? (
           <Group>
             <ErrorMessage>{error}</ErrorMessage>
           </Group>
         ) : null}
         <Group>
-          <Btn variant="filled">Create Account</Btn>
+          <Btn variant="filled" >Create Account</Btn>
         </Group>
       </Form>
+      </div>
     </Container>
+    </div>
   );
 }

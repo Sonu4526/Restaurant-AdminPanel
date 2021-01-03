@@ -23,6 +23,25 @@ router.get("/:userId", (req, res) => {
     });
 });
 
+// get all menu items for given restaurant for Category
+router.get("/:userId/:category", (req, res) => {
+  const { userId, category } = req.params;
+  db.menuItems
+    .findAll({
+      where: {
+        userId: userId,
+        category: category,
+      },
+      raw: true,
+      order: [["category", "ASC"]],
+    })
+    .then((response) => {
+      res.json(response);
+    });
+});
+
+
+
 // post NEW menu item
 router.post("/", (req, res) => {
   db.menuItems.create(req.body).then((response) => res.json(response));

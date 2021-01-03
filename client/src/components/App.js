@@ -13,6 +13,7 @@ import Dashboard from "./users/Dashboard";
 import RestaurantMenu from "./restaurant/Menu";
 import GlobalStyles from "../GlobalStyle";
 import Footer from "./utility/Footer";
+import ForgotPassword from "./users/ForgotPassword"
 
 const THEME = {
   colors: {
@@ -43,6 +44,8 @@ export default function App() {
               <Route path="/users/login" exact component={Login} />
               <Route path="/restaurant/:id" exact component={RestaurantMenu} />
               <Route path="/users/dashboard" exact component={Dashboard} />
+              <Route path="/users/ForgotPassword" exact component={ForgotPassword} />
+
               {/* <ProtectedRoute
                 exact
                 to="/users/dashboard"

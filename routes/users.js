@@ -83,4 +83,65 @@ router.patch("/:id", (req, res) => {
     });
 });
 
+
+router.get("/restaurantName", (req, res) => {
+    db.findAll((err, data) => {
+      if (err)
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving customers."
+        });
+      else res.send(data);
+    });
+})
+
+
+// get all menu Ctegories List
+router.get("/:userId", (req, res) => {
+  const { userId } = req.params;
+  db.menuItems
+    .findAll({
+      where: {
+        userId: userId,
+      },
+      raw: true,
+      group: [["category"]],
+    })
+    .then((response) => {
+      res.json(response);
+    });
+});
+
+router.post("/change-password", (req, res) => {
+    const user = req.body;
+    console.log(user)
+    db.users
+    .findOne({
+      where: {
+        id: user.user_id,
+      },
+    })
+    .then(async (response) => {
+      if (!response) {
+        res.json({
+          message: "User not found",
+        });
+      } else {
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(user.new_password, salt);
+        db.users.update({password: hashedPassword},{where : {id:user.user_id}}).then((user) => {
+          if(user) {
+            res.json({
+              message: "Password updated succesfully."
+            });
+          } else{
+            res.json({
+              message: "faild to update password."
+            });
+          }
+        });
+      }
+    });
+});  
+
 module.exports = router;

@@ -10,7 +10,7 @@ router.get("/menu/:id", (req, res) => {
   const { id } = req.params;
   db.users
     .findByPk(id, {
-      attributes: ["id", "restaurant"],
+      attributes: ["id", "restaurant","image"],
       include: [
         {
           model: db.menuItems,
@@ -25,16 +25,18 @@ router.get("/menu/:id", (req, res) => {
       if (response) {
         const { dataValues: data } = response;
         // separate data
-        const { id, restaurant, UserMenuItems } = data;
+        const { id, restaurant, image, UserMenuItems } = data;
 
         res.json({
           id,
           restaurant,
+          image,
           menu: UserMenuItems,
         });
       }
     });
 });
+
 
 router.get("/qr/:id", (req, res) => {
   const { id } = req.params;
@@ -87,5 +89,29 @@ router.get("/pdf/:id", (req, res) => {
       );
     });
 });
+
+router.get("/restaurantDetails", (req, res) => {
+  db.users
+    .findAll({
+      raw: true,
+    })
+    .then((response) => {
+      res.json(response);
+    });
+});
+
+
+//Restaurant Details by ID
+router.get("/restaurantDetails/:id", (req, res) => {
+  const { id } = req.params;
+  db.users
+    .findByPk(id, {
+      raw: true,
+    })
+    .then((response) => {
+      res.json(response);
+    });
+});
+
 
 module.exports = router;

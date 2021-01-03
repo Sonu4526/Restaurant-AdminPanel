@@ -26,6 +26,12 @@ module.exports = function (sequelize, DataTypes) {
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     restaurant: DataTypes.STRING,
+    restaurant_info: DataTypes.STRING,
+    image: DataTypes.STRING,
+    Address: DataTypes.STRING,
+    fromTime: DataTypes.STRING,
+    toTime: DataTypes.STRING,
+
   });
 
   Users.associate = function (models) {

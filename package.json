@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --ignore './client/' --exec node server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "webpack --config src/webpack.config.js",
+    "deploy": "npm run build && gh-pages -d build"
   },
   "repository": {
     "type": "git",
